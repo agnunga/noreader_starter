@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0099cc"
+    tools:context="com.ag.noreader.LoginPin"
+    android:orientation="vertical">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom">
+
+        <ImageView
+            android:id="@+id/image_1"
+            android:layout_width="wrap_content"
+            android:layout_height="72dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"
+            android:src="@drawable/flashbutton" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Welcome, Enter PIN to proceed."
+            android:layout_marginBottom="24dp"/>
+
+        <com.andrognito.pinlockview.IndicatorDots
+
+            app:dotDiameter="14dp"
+            app:dotSpacing="8dp"
+            app:indicatorType="fill"
+
+            android:id="@+id/indicator_dots"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.andrognito.pinlockview.PinLockView
+
+            app:pinLength="4"
+            app:keypadTextColor="#ffffff"
+            app:keypadTextSize="20dp"
+            app:keypadButtonSize="60dp"
+            app:keypadHorizontalSpacing="30dp"
+            app:keypadVerticalSpacing="24dp"
+            app:keypadDeleteButtonSize="14dp"
+            app:keypadShowDeleteButton="true"
+            app:keypadDeleteButtonPressedColor="#ff5522"
+
+            android:id="@+id/pin_lock_view"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>
