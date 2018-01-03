@@ -12,7 +12,7 @@ import android.hardware.Camera;
 
 
 /**
- * Created by Fadi on 5/11/2014.
+ * Created by A on 5/11/2014.
  */
 public class Tools {
 

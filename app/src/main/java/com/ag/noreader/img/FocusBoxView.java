@@ -14,7 +14,7 @@ import com.ag.noreader.R;
 
 
 /**
- * Created by Fadi on 5/11/2014.
+ * Created by A on 5/11/2014.
  */
 public class FocusBoxView extends View {
 

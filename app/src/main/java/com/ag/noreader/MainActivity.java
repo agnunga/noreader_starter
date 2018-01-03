@@ -26,7 +26,7 @@ import com.ag.noreader.img.MyTessOCR;
 
 import java.io.File;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MyBaseActivity {
 
     private MyTessOCR mTessOCR;
     private static final int MIN_SIZE = 5000 * 1024;

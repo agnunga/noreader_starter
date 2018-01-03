@@ -2,7 +2,6 @@ package com.ag.noreader;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import android.content.Intent;
@@ -13,33 +12,39 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ag.noreader.data.DataBaseHandler;
+import com.ag.noreader.data.User;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends MyBaseActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
     private boolean rightCredentials = false;
     private String valid_email = "";
-    DataBaseHandler  dataBaseHandler;
+    private DataBaseHandler  dataBaseHandler;
+    private User user = new User();
 
     @InjectView(R.id.input_email) EditText _emailText;
     @InjectView(R.id.input_password) EditText _passwordText;
     @InjectView(R.id.btn_login) Button _loginButton;
     @InjectView(R.id.link_signup) TextView _signupLink;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        //setting context
+        MyBaseActivity.setContext(this);
         ButterKnife.inject(this);
-        dataBaseHandler = new DataBaseHandler(this);
-        
+        dataBaseHandler = new DataBaseHandler(getContext());
+
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                user.setEmail(_emailText.getText().toString());
+                user.setPassword(_passwordText.getText().toString());
                 login();
             }
         });
@@ -57,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login() {
         Log.d(TAG, "Login");
-        
+
         if (!validate()) {
             onLoginFailed();
             return;
@@ -65,19 +70,21 @@ public class LoginActivity extends AppCompatActivity {
 
         _loginButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
 
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        final ProgressDialog progressDialog = showProgressDialog(getContext(), "Authenticating...");
+
 
         // TODO: Implement your own authentication logic here.
-        if(email.equals("agunga3d@gmail.com")&&password.equals("olooJade")){
-            dataBaseHandler.saveDemo_data(email, password);
-            valid_email = email;
+        if(user.getEmail().equals("agunga3d@gmail.com") && user.getPassword().equals("olooJade")){
+            rightCredentials = true;
+        }else {
+            Log.d(TAG, "Not Oloo :::::olooJade ");
+        }
+
+        user = dataBaseHandler.processLogin(user.getEmail(), user.getPassword());
+        if(user.getId() > 0){
+            valid_email = user.getEmail();
+            Log.d(TAG, "ID :: "+ user.getId() + " Email ::::: " + valid_email);
             rightCredentials = true;
         }
 
@@ -90,22 +97,19 @@ public class LoginActivity extends AppCompatActivity {
                         }else {
                             onLoginFailed();
                         }
-                        progressDialog.dismiss();
+                        dismissProgressDialog(progressDialog);
                     }
                 }, 3000);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
-
-                // TODO: Implement successful signup logic here
-                Intent intent = new Intent(this, CameraActivity.class);
-                intent.putExtra("email", valid_email);
-                startActivity(intent);
-                this.finish();
+                user = (User) data.getSerializableExtra("user");
+                Log.d(TAG, "USER :::::: " + user.getId() +" " + user.getName() +" " + user.getEmail() +" " + user.getPassword());
+//                login();
+                onLoginSuccess();
             }
         }
     }
@@ -116,9 +120,17 @@ public class LoginActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
+    public void goToMainAfterLogin(){
+        Intent intent = new Intent(getContext(), CameraActivity.class);
+        intent.putExtra("email", valid_email);
+        startActivity(intent);
+        this.finish();
+    }
+
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
-        finish();
+//        finish();
+        goToMainAfterLogin();
     }
 
     public void onLoginFailed() {
@@ -130,8 +142,8 @@ public class LoginActivity extends AppCompatActivity {
     public boolean validate() {
         boolean valid = true;
 
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        String email = user.getEmail();
+        String password = user.getPassword();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _emailText.setError("enter a valid email address");

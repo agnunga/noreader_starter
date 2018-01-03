@@ -1,8 +1,8 @@
 package com.ag.noreader;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -10,21 +10,26 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ag.noreader.data.DataBaseHandler;
+import com.ag.noreader.data.User;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends MyBaseActivity {
     private static final String TAG = "SignupActivity";
+    private DataBaseHandler dataBaseHandler;
 
     @InjectView(R.id.input_name) EditText _nameText;
     @InjectView(R.id.input_email) EditText _emailText;
     @InjectView(R.id.input_password) EditText _passwordText;
     @InjectView(R.id.btn_signup) Button _signupButton;
     @InjectView(R.id.link_login) TextView _loginLink;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dataBaseHandler = new DataBaseHandler(this);
         setContentView(R.layout.activity_signup);
         ButterKnife.inject(this);
 
@@ -54,34 +59,35 @@ public class SignupActivity extends AppCompatActivity {
 
         _signupButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                R.style.AppTheme);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Creating Account...");
-        progressDialog.show();
-
-        String name = _nameText.getText().toString();
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        final ProgressDialog progressDialog = showProgressDialog(SignupActivity.this, "Creating Account...");
+        User user = new User();
+        user.setName(_nameText.getText().toString());
+        user.setEmail(_emailText.getText().toString());
+        user.setPassword(_passwordText.getText().toString());
 
         // TODO: Implement your own signup logic here.
+        final boolean signed_up = dataBaseHandler.saveData(user);
 
+        final User tmp_user = user;
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed 
-                        // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
-                        progressDialog.dismiss();
+                        if(signed_up){
+                            onSignupSuccess(tmp_user);
+                        }else {
+                            onSignupFailed();
+                        }
+                        dismissProgressDialog(progressDialog);
                     }
                 }, 3000);
     }
 
 
-    public void onSignupSuccess() {
+    public void onSignupSuccess(User user) {
         _signupButton.setEnabled(true);
-        setResult(RESULT_OK, null);
+        Intent intent = new Intent(this,  LoginActivity.class);
+        intent.putExtra("user", user);
+        setResult(RESULT_OK, intent);
         finish();
     }
 

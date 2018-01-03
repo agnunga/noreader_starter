@@ -14,23 +14,36 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-public abstract class MyBaseActivity extends Activity {
+public class MyBaseActivity extends AppCompatActivity {
 
     private ProgressDialog mProgressDialog;
     private static final int PERMISSION_REQUEST_CODE = 1;
+
+    private static Context mContext;
+
+    public static Context getContext() {
+        return mContext;
+    }
+
+    public static void setContext(Context mContext) {
+        MyBaseActivity.mContext = mContext;
+    }
 
     /*@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }*/
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    /*@Override
+   /* @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_common, menu);
  
@@ -43,9 +56,9 @@ public abstract class MyBaseActivity extends Activity {
         }
  
         return super.onCreateOptionsMenu(menu);
-    }
+    }*/
  
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
  
@@ -96,8 +109,8 @@ public abstract class MyBaseActivity extends Activity {
     }
 
 
-    public void makeCall(String s, boolean ussd){
-        if(ussd)
+    public void makeCall(String s, boolean isUssd){
+        if(isUssd)
             s = s + Uri.encode("#");
         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + s));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED){
@@ -125,5 +138,21 @@ public abstract class MyBaseActivity extends Activity {
                 }
                 break;
         }
+    }
+
+
+
+    public ProgressDialog showProgressDialog(Context context, String message){
+        final ProgressDialog progressDialog = new ProgressDialog(context,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage(message);
+        progressDialog.show();
+        Window window = progressDialog.getWindow();
+        window.setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        return  progressDialog;
+    }
+    public void dismissProgressDialog(ProgressDialog progressDialog){
+        progressDialog.dismiss();
     }
 }

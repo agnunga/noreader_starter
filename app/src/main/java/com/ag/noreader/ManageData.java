@@ -3,7 +3,7 @@ package com.ag.noreader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class ManageData extends AppCompatActivity {
+public class ManageData extends MyBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

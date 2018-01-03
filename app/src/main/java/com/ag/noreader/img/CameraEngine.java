@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Fadi on 5/11/2014.
+ * Created by A on 5/11/2014.
  */
 public class CameraEngine {
     static final String TAG = "DBG_" + CameraUtils.class.getName();
