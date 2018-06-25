@@ -15,7 +15,7 @@ import com.ag.noreader.data.DataBaseHandler;
 import com.ag.noreader.data.User;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 public class LoginActivity extends MyBaseActivity {
     private static final String TAG = "LoginActivity";
@@ -25,18 +25,18 @@ public class LoginActivity extends MyBaseActivity {
     private DataBaseHandler  dataBaseHandler;
     private User user = new User();
 
-    @InjectView(R.id.input_email) EditText _emailText;
-    @InjectView(R.id.input_password) EditText _passwordText;
-    @InjectView(R.id.btn_login) Button _loginButton;
-    @InjectView(R.id.link_signup) TextView _signupLink;
+    @BindView(R.id.input_email) EditText _emailText;
+    @BindView(R.id.input_password) EditText _passwordText;
+    @BindView(R.id.btn_login) Button _loginButton;
+    @BindView(R.id.link_signup) TextView _signupLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         //setting context
-        MyBaseActivity.setContext(this);
-        ButterKnife.inject(this);
+        LoginActivity.setContext(this);
+        ButterKnife.bind(this);
         dataBaseHandler = new DataBaseHandler(getContext());
 
         _loginButton.setOnClickListener(new View.OnClickListener() {

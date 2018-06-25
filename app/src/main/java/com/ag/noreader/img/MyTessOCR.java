@@ -20,7 +20,8 @@ import java.io.OutputStream;
 
 public class MyTessOCR {
     private String datapath;
-    private TessBaseAPI mTess;    Context context;
+    private TessBaseAPI mTess;
+    Context context;
     private String TAG = this.getClass().getSimpleName();
     private static final String tessdir = "tesseract";
     private static final String subdir = "tessdata";
